@@ -70,69 +70,50 @@ class ItemsList implements ArgumentInterface
         return (int) $this->request->getParam('id');
     }
 
+    /**
+     * Check if wishlist exists
+     *
+     * @throws \InvalidArgumentException
+     * @return void
+     */
     public function wishlistExists()
     {
         $wishlistId = $this->getWishlistId();
         if (empty($wishlistId)) {
-            throw new \InvalidArgumentException(__('Wishlist ID is missing.'));
+            throw new \InvalidArgumentException('Wishlist ID is missing.');
         }
 
         try {
             $wishlist = $this->multipleWishlistRepository->getById($wishlistId);
-            if (!$wishlist) {
-                throw new \InvalidArgumentException(__('Wishlist not found.'));
+            if (empty($wishlist)) {
+                throw new \InvalidArgumentException('Wishlist not found.');
             }
         } catch (NoSuchEntityException $e) {
-            throw new \InvalidArgumentException(__('Wishlist not found.'));
+            throw new \InvalidArgumentException('Wishlist not found.');
         }
     }
 
-    public function getWishlistItems(): ?MultipleWishlistItemInterface
+    /**
+     * Get wishlist the products
+     *
+     * @return array|MultipleWishlistItemInterface|null
+     */
+    public function getWishlistItems()
     {
         try {
             $this->wishlistExists();
 
             $wishlistItems = $this->multipleWishlistItemRepository->getById($this->getWishlistId());
             if (empty($wishlistItems)) {
-                throw new \InvalidArgumentException(__('Wishlist items not found.'));
+                return [];
             }
 
             return $wishlistItems;
-            
+
         } catch (\InvalidArgumentException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());
             return null;
         }
-
-        // return [
-        //     [
-        //         'image' => 'https://placehold.co/100',
-        //         'product_url' => '#',
-        //         'url_remove' => '#',
-        //         'name' => 'Product 1',
-        //         'sku' => 'product-1',
-        //         'price' => 100.00,
-        //         'quantity' => 1,
-        //     ],
-        //     [
-        //         'image' => 'https://placehold.co/100',
-        //         'product_url' => '#',
-        //         'url_remove' => '#',
-        //         'name' => 'Product 2',
-        //         'sku' => 'product-2',
-        //         'price' => 100.00,
-        //         'quantity' => 2,
-        //     ],
-        //     [
-        //         'image' => 'https://placehold.co/100',
-        //         'product_url' => '#',
-        //         'url_remove' => '#',
-        //         'name' => 'Product 3',
-        //         'sku' => 'product-3',
-        //         'price' => 100.00,
-        //         'quantity' => 3,
-        //     ]
-        // ];
     }
 
     public function getBackUrl(): string

@@ -22,7 +22,7 @@ class MultipleWishlistItemRepository implements MultipleWishlistItemRepositoryIn
         $this->resourceModelMultipleWishlistItem = $resourceModelMultipleWishlistItem;
     }
 
-    public function save(MultipleWishlistItemInterface $multipleWishlistItem): MultipleWishlistItemInterface
+    public function save(MultipleWishlistItemInterface $multipleWishlistItem): MultipleWishlistItem
     {
         try {
             $this->resourceModelMultipleWishlistItem->save($multipleWishlistItem);
@@ -35,15 +35,16 @@ class MultipleWishlistItemRepository implements MultipleWishlistItemRepositoryIn
         return $multipleWishlistItem;
     }
 
-    public function getById(int $multipleWishlistId): MultipleWishlistItemInterface
+    public function getById(int $multipleWishlistId): ?MultipleWishlistItemInterface
     {
         $multipleWishlistItem = $this->multipleWishlistItemFactory->create();
-        $this->resourceModelMultipleWishlistItem->load($multipleWishlistItem, $multipleWishlistId);
+        $this->resourceModelMultipleWishlistItem->load($multipleWishlistItem, $multipleWishlistId, 'wishlist_id');
 
         if (!$multipleWishlistItem->getId()) {
-            throw new \Magento\Framework\Exception\NoSuchEntityException(
-                __('Object with ID "%1" does not exist.', $multipleWishlistId)
-            );
+            // throw new \Magento\Framework\Exception\NoSuchEntityException(
+            //     __('Object with ID "%1" does not exist.', $multipleWishlistId)
+            // );
+            return null; // Return null if the entity does not exist
         }
 
         return $multipleWishlistItem;

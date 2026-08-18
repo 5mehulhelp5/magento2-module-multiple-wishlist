@@ -8,7 +8,7 @@ use BrunoDuarte\MultipleWishlist\Api\Data\MultipleWishlistItemInterface;
 
 interface MultipleWishlistItemRepositoryInterface
 {
-    public function getById(int $multipleWishlistId): MultipleWishlistItemInterface;
+    public function getById(int $multipleWishlistId): ?MultipleWishlistItemInterface;
 
     public function save(MultipleWishlistItemInterface $multipleWishlistItem): MultipleWishlistItemInterface;
 
