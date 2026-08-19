@@ -1,15 +1,16 @@
 <?php
 
-/**
- * @var \BrunoDuarte\MultipleWishlist\Block\Listing\Listing $block
- * @var \Magento\Framework\Escaper $escaper
- * @var \BrunoDuarte\MultipleWishlist\Helper\Data $helperModule
- */
+    /**
+     * @var \BrunoDuarte\MultipleWishlist\Block\Listing\Listing $block
+     * @var \BrunoDuarte\MultipleWishlist\Helper\Data $helperModule
+     * @var \Magento\Framework\Escaper $escaper
+     */
 
-$multiplesWishlist = $block->getCustomerMultipleWishlist();
-$helperModule = $this->helper(\BrunoDuarte\MultipleWishlist\Helper\Data::class);
+    $multiplesWishlist = $block->getCustomerMultipleWishlist();
+    $helperModule = $this->helper(\BrunoDuarte\MultipleWishlist\Helper\Data::class);
 ?>
-<?php if ($multiplesWishlist !== null) : ?>
+
+<?php if ($multiplesWishlist !== null): ?>
     <div class="table-wrapper">
         <table class="data table">
             <thead>
@@ -31,12 +32,9 @@ $helperModule = $this->helper(\BrunoDuarte\MultipleWishlist\Helper\Data::class);
                             <a class="action view" href="<?= $block->getViewUrl($list->getId()) ?>">
                                 <?= __('View') ?>
                             </a>
-
-                            <?php if ($list->getIsActive()) : ?>
-                                <a class="action view" href="<?= $block->getOrderUrl($list->getId()) ?>">
-                                    <?= __('Order') ?>
-                                </a>
-                            <?php endif; ?>
+                            <a class="action view" href="<?= $block->getEditUrl($list->getId()) ?>">
+                                <?= __('Edit') ?>
+                            </a>
 
                             <?php if ($helperModule->canDeleteLists()) : ?>
                                 <a class="action view" href="<?= $block->getDeleteUrl($list->getId()) ?>">
@@ -55,8 +53,11 @@ $helperModule = $this->helper(\BrunoDuarte\MultipleWishlist\Helper\Data::class);
             <?= $block->getPagerHtml(); ?>
         </div>
     <?php endif ?>
+
 <?php else : ?>
+
     <div class="message info empty">
         <span><?= __('You have not lists.') ?></span>
     </div>
+
 <?php endif; ?>

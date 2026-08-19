@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <update handle="customer_account"/>
+    <body>
+        <referenceContainer name="content">
+            <block name="multiple.wishlist.header" template="BrunoDuarte_MultipleWishlist::listing/header.phtml">
+                <arguments>
+                    <argument name="multiple_wishlist_header" xsi:type="object">BrunoDuarte\MultipleWishlist\ViewModel\Listing\Header</argument>
+                </arguments>
+            </block>
+
+            <block class="BrunoDuarte\MultipleWishlist\Block\Listing\Edit" name="multiple.wishlist.listing.edit" template="BrunoDuarte_MultipleWishlist::listing/edit.phtml" cacheable="false"/>
+        </referenceContainer>
+    </body>
+</page>

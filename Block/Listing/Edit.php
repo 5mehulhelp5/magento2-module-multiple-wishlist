@@ -88,9 +88,9 @@ class Listing extends Template
         return $isActive ? 'Active' : 'Inactive';
     }
 
-    public function getViewUrl(int $multipleWishlistId): string
+    public function getSaveUrl(int $multipleWishlistId): string
     {
-        return $this->getUrl('multiple_wishlist/page/view', ['id' => $multipleWishlistId]);
+        return $this->getUrl('multiple_wishlist/page/save', ['id' => $multipleWishlistId]);
     }
 
     public function getOrderUrl(int $multipleWishlistId): string
@@ -98,9 +98,9 @@ class Listing extends Template
         return $this->getUrl('multiple_wishlist/post/orderPost', ['id' => $multipleWishlistId]);
     }
 
-    public function getEditUrl(int $multipleWishlistId): string
+    public function getGoBackUrl(int $multipleWishlistId): string
     {
-        return $this->getUrl('multiple_wishlist/page/edit', ['id' => $multipleWishlistId]);
+        return $this->getUrl('multiple_wishlist/page/listing');
     }
 
     /**

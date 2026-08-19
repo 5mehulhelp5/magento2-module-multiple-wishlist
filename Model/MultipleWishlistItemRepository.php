@@ -41,9 +41,6 @@ class MultipleWishlistItemRepository implements MultipleWishlistItemRepositoryIn
         $this->resourceModelMultipleWishlistItem->load($multipleWishlistItem, $multipleWishlistId, 'wishlist_id');
 
         if (!$multipleWishlistItem->getId()) {
-            // throw new \Magento\Framework\Exception\NoSuchEntityException(
-            //     __('Object with ID "%1" does not exist.', $multipleWishlistId)
-            // );
             return null; // Return null if the entity does not exist
         }
 
