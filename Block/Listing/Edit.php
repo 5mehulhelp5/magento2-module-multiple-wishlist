@@ -19,11 +19,11 @@ use Magento\Store\Model\StoreManagerInterface;
 use Magento\Theme\Block\Html\Pager;
 
 /**
- * class Listing
+ * class Edit
  *
  * @package BrunoDuarte\MultipleWishlist\Block\Listing
  */
-class Listing extends Template
+class Edit extends Template
 {
     private const QTY_DEFAULT = 5;
     private const QTY_DEFAULT_DOUBLE = 10;

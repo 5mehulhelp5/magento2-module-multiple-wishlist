@@ -23,7 +23,7 @@ class Data extends AbstractHelper
     private const MULTIPLE_WISHLIST_MODULE_ENABLE = 'multiple_wishlist/general/enabled';
     private const MULTIPLE_WISHLIST_MODULE_TITLE = 'multiple_wishlist/general/title';
     private const MULTIPLE_WISHLIST_AVAILABLE_CUSTOMER_GROUPS = 'multiple_wishlist/general/available_customer_groups';
-    private const DELETE_LISTS = 'multiple_wishlist/general/delete_lists';
+    private const DELETE_LISTS = 'multiple_wishlist/general/wishlist_delete';
 
     public function isModuleEnable(?int $storeId = null): bool
     {

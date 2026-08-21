@@ -1,1 +1,12 @@
-<h1>Formulário de Edição da Lista de Desejos</h1>
+<?php
+    /**
+     * @var BrunoDuarte\MultipleWishlist\ViewModel\Listing\Edit $viewModel
+     * @var Magento\Framework\View\Element\Template $block
+     */
+
+    $viewModel = $block->getData('multiple.wishlist.listing.edit');
+    $wishlist = $viewModel->getWishlist();
+?>
+<h1 class="page-title" style="margin-top:1.5rem;">
+    <span class="base" data-ui-id="page-title-wrapper"><?= __('Wishlist Items: %1', $viewModel->getTitle()) ?></span>
+</h1>
