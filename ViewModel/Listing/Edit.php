@@ -84,9 +84,9 @@ class Edit implements ArgumentInterface
     /**
      * Get wishlist all data
      *
-     * @return void
+     * @return mixed
      */
-    public function getWishlist(): ?array
+    public function getWishlist()
     {
         try {
             $wishlistData = $this->multipleWishlistRepository->getById($this->getWishlistId());

@@ -9,7 +9,11 @@
                 </arguments>
             </block>
 
-            <block class="BrunoDuarte\MultipleWishlist\Block\Listing\Edit" name="multiple.wishlist.listing.edit" template="BrunoDuarte_MultipleWishlist::listing/edit.phtml" cacheable="false"/>
+            <block name="multiple.wishlist.listing.edit" template="BrunoDuarte_MultipleWishlist::listing/edit.phtml">
+                <arguments>
+                    <argument name="multiple_wishlist_listing_edit" xsi:type="object">BrunoDuarte\MultipleWishlist\ViewModel\Listing\Edit</argument>
+                </arguments>
+            </block>
         </referenceContainer>
     </body>
 </page>
