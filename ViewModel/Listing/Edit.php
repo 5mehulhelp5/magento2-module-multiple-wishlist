@@ -16,6 +16,7 @@ use Magento\Customer\Model\Customer;
 use Magento\Customer\Model\SessionFactory;
 use Magento\Framework\App\RequestInterface;
 use Magento\Framework\Message\ManagerInterface;
+use Magento\Framework\UrlInterface;
 use Magento\Framework\View\Element\Block\ArgumentInterface;
 use Magento\Store\Model\StoreManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -48,6 +49,11 @@ class Edit implements ArgumentInterface
      */
     public $logger;
 
+    /**
+     * @var UrlInterface
+     */
+    public $urlBuilder;
+
     public function __construct(
         MultipleWishlistCollectionFactory $multipleWishlistCollectionFactory,
         MultipleWishlistRepositoryInterface $multipleWishlistRepository,
@@ -55,7 +61,8 @@ class Edit implements ArgumentInterface
         StoreManagerInterface $storeManager,
         RequestInterface $request,
         ManagerInterface $messageManager,
-        LoggerInterface $logger
+        LoggerInterface $logger,
+        UrlInterface $urlBuilder
     ) {
         $this->multipleWishlistCollectionFactory = $multipleWishlistCollectionFactory;
         $this->multipleWishlistRepository = $multipleWishlistRepository;
@@ -64,6 +71,7 @@ class Edit implements ArgumentInterface
         $this->request = $request;
         $this->messageManager = $messageManager;
         $this->logger = $logger;
+        $this->urlBuilder = $urlBuilder;
     }
 
     private function getCustomer(): Customer
@@ -102,7 +110,11 @@ class Edit implements ArgumentInterface
         }
     }
 
-
+    /**
+     * Get the name of wishlist
+     *
+     * @return mixed|string
+     */
     public function getTitle(): string
     {
         $customer = $this->getCustomer();
@@ -115,4 +127,15 @@ class Edit implements ArgumentInterface
 
         return $wishlist->getTitle() ?: '';
     }
+
+    /**
+     * Builder URL by requested the edition of the wishlist
+     *
+     * @return string
+     */
+    public function getSaveUrl(): string
+    {
+        return $this->urlBuilder->getUrl('multiple_wishlist/post/EditPost');
+    }
+
 }

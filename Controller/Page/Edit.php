@@ -22,6 +22,7 @@ class Edit extends AbstractPage
     {
         $this->checkPermissions();
         $result = $this->resultPageFactory->create();
+        $result->getConfig()->getTitle()->unsetValue();
         return $result;
     }
 }

@@ -9,8 +9,47 @@
      */
 
     $viewModel = $block->getData('multiple_wishlist_listing_edit');
-    $wishlist = $viewModel->getWishlist();
+    $wishlist  = $viewModel->getWishlist();
+    $title     = $wishlist->getTitle() ?? '';
+    $status    = $wishlist->getIsActive() ?? '';
 ?>
 <h1 class="page-title" style="margin-top:1.5rem;">
-    <span class="base" data-ui-id="page-title-wrapper"><?= __('Wishlist Items: %1', $viewModel->getTitle()) ?></span>
+    <span class="base" data-ui-id="page-title-wrapper"><?= __('Wishlist Edit: %1', $viewModel->getTitle()) ?></span>
 </h1>
+
+<div>
+    <form class="form" action="<?= $viewModel->getSaveUrl() ?>" method="POST" style="width: 50%;" data-mage-init='{"validation": {"rules": {"field-1": {"required":true}}}}'>
+        <?= $block->getBlockHtml('formkey') ?>
+
+        <fieldset class="fieldset info">
+            <div class="field required">
+                <label class="label" for="title">
+                    <span><?= __('Title') ?></span>
+                </label>
+                <div class="control">
+                    <input type="text" name="multiple_wishlist[title]" value="<?= $title ?>" title="<?= __('Title') ?>" class="input-text" data-validate='{"required":true}' data-msg-required="<?= __('The field title is required.') ?>" required />
+                </div>
+            </div>
+
+            <div class="field required">
+                <label class="label">
+                    <span><?= __('Status') ?></span>
+                </label>
+                <div class="control">
+                    <select name="multiple_wishlist[is_active]" title="<?= __('Status') ?>">
+                        <option value="0" <?php echo ($status == 0) ? 'selected' : '' ?>><?= __('Inactive') ?></option>
+                        <option value="1" <?php echo ($status == 1) ? 'selected' : '' ?>><?= __('Active') ?></option>
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+
+        <div class="actions-toolbar">
+            <div class="primary">
+                <button type="submit" class="action save primary" title="<?= __('Save Buy List') ?>" style="margin: 0">
+                    <span><?= __('Save') ?></span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
