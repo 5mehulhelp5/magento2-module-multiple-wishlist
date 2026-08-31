@@ -14,6 +14,7 @@ use BrunoDuarte\MultipleWishlist\Helper\Data;
 use BrunoDuarte\MultipleWishlist\Model\MultipleWishlistFactory;
 use Magento\Customer\Model\SessionFactory;
 use Magento\Framework\App\RequestInterface;
+use Magento\Framework\App\Action\HttpPostActionInterface;
 use Magento\Framework\App\Response\RedirectInterface;
 use Magento\Framework\Controller\Result\Redirect;
 use Magento\Framework\Controller\Result\RedirectFactory;
@@ -29,7 +30,7 @@ use Psr\Log\LoggerInterface;
  * @package BrunoDuarte\MultipleWishlist\Controller\Post
  * @SuppressWarnings(PHPMD.CouplingBetweenObjects)
  */
-class EditPost extends AbstractPost
+class EditPost extends AbstractPost implements HttpPostActionInterface
 {
     /**
      * @var MultipleWishlistRepositoryInterface
@@ -89,24 +90,44 @@ class EditPost extends AbstractPost
         try {
             $this->init();
 
-            if (!$this->formKeyValidator->validate($this->request)) {
-                throw new LocalizedException(
-                    __('Something went wrong while saving the page. Please refresh the page and try again.')
-                );
+            $validFormKey = $this->formKeyValidator->validate($this->request);
+            if ($validFormKey) { // verificar se o método da requisição é post
+                // form data
+                $multipleWishlistParams = $this->request->getParam('multiple_wishlist');
+                if (empty($multipleWishlistParams)) {
+                    throw new LocalizedException(
+                        __('You must fill in all fields required to edit list.')
+                    );
+                }
+
+                // $storeId = (int) $this->getStore()->getId();
+                $multipleWishlistParams['title']      = filter_var($multipleWishlistParams['title'], FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
+                $multipleWishlistParams['is_active']  = filter_var($multipleWishlistParams['is_active'], FILTER_VALIDATE_INT, [
+                    'options' => [
+                        'min_range' => 0,
+                        'max_range' => 1
+                    ]
+                ]) ?? 0;
+
+                // Wishlist id
+                $multipleWishlistId = $this->request->getParam('id');
+                $result = $this->multipleWishlistRepository->update($multipleWishlistId, $multipleWishlistParams);
+                if (!$result) {
+                    throw new LocalizedException(__('Unable to update your wishlist.'));
+                }
+
+                $this->setSuccessMessage(__('Wishlist %s was updated!', $multipleWishlistParams['title']));
             }
 
-            $multipleWishlistParams = $this->request->getParam('multiple_wishlist');
-            if (empty($multipleWishlistParams)) {
-                throw new LocalizedException(
-                    __('You must fill in all fields required to edit list.')
-                );
+            if (!$validFormKey) {
+                $this->setErrorMessage(__('Form key invalid!'));
             }
 
-            // continuar com o processo de edição...
+            $resultRedirect->setPath('*/*/edit');
 
         } catch (LocalizedException $exception) {
             $this->setErrorMessage($exception->getMessage());
-            $resultRedirect->setPath('customer/account/login/');
+            $resultRedirect->setPath('*/*/edit');
         } catch (\Exception $exception) {
             $this->setErrorMessage($exception->getMessage());
             $resultRedirect->setPath('multiple_wishlist/page/create/');

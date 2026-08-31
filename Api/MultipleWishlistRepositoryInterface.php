@@ -12,6 +12,8 @@ interface MultipleWishlistRepositoryInterface
 
     public function save(MultipleWishlistInterface $multipleWishlist): MultipleWishlistInterface;
 
+    public function update(int $multipleWishlistId, Array $formData): bool;
+
     public function delete(MultipleWishlistInterface $multipleWishlist): bool;
 
     public function deleteById(int $multipleWishlistId): bool;

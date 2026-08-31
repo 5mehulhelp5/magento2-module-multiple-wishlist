@@ -30,7 +30,7 @@ class MultipleWishlistRepository implements MultipleWishlistRepositoryInterface
     {
         /** @var MultipleWishlistModel $multipleWishlist */
         $multipleWishlist = $this->multipleWishlistFactory->create();
-        
+
         $this->resourceModelMultipleWishlist->load($multipleWishlist, $multipleWishlistId);
 
         if (!$multipleWishlist->getId()) {
@@ -54,6 +54,16 @@ class MultipleWishlistRepository implements MultipleWishlistRepositoryInterface
         }
 
         return $multipleWishlist;
+    }
+    public function update(int $multipleWishlistId, Array $formData): bool
+    {
+        $multipleWishlist = $this->getById($multipleWishlistId);
+        $multipleWishlist
+            ->setTitle($formData['title'])
+            ->setIsActive($formData['status'])
+            ->save(); // <---- parei aqui
+
+        return true;
     }
 
     public function delete(MultipleWishlistInterface $multipleWishlist): bool
