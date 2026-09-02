@@ -20,6 +20,7 @@
 <div>
     <form class="form" action="<?= $viewModel->getSaveUrl() ?>" method="POST" style="width: 50%;" data-mage-init='{"validation": {"rules": {"field-1": {"required":true}}}}'>
         <?= $block->getBlockHtml('formkey') ?>
+        <input type="hidden" name="multiple_wishlist[id]" value="<?= $wishlist->getId() ?>" />
 
         <fieldset class="fieldset info">
             <div class="field required">

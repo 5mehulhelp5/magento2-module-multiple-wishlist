@@ -60,7 +60,7 @@ class MultipleWishlistRepository implements MultipleWishlistRepositoryInterface
         $multipleWishlist = $this->getById($multipleWishlistId);
         $multipleWishlist
             ->setTitle($formData['title'])
-            ->setIsActive($formData['status'])
+            ->setIsActive($formData['is_active'])
             ->save(); // <---- parei aqui
 
         return true;

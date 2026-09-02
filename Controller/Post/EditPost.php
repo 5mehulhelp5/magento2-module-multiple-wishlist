@@ -101,8 +101,9 @@ class EditPost extends AbstractPost implements HttpPostActionInterface
                 }
 
                 // $storeId = (int) $this->getStore()->getId();
+                $multipleWishlistParams['id']         = filter_var($multipleWishlistParams['id'], FILTER_VALIDATE_INT) ?? 0;
                 $multipleWishlistParams['title']      = filter_var($multipleWishlistParams['title'], FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
-                $multipleWishlistParams['is_active']  = filter_var($multipleWishlistParams['is_active'], FILTER_VALIDATE_INT, [
+                $multipleWishlistParams['is_active']  = (bool) filter_var($multipleWishlistParams['is_active'], FILTER_VALIDATE_INT, [
                     'options' => [
                         'min_range' => 0,
                         'max_range' => 1
@@ -110,27 +111,32 @@ class EditPost extends AbstractPost implements HttpPostActionInterface
                 ]) ?? 0;
 
                 // Wishlist id
-                $multipleWishlistId = $this->request->getParam('id');
-                $result = $this->multipleWishlistRepository->update($multipleWishlistId, $multipleWishlistParams);
+                if (empty($multipleWishlistParams['id'])) {
+                    throw new LocalizedException(__('Wishlist ID is required.'));
+                }
+
+                $result = $this->multipleWishlistRepository->update($multipleWishlistParams['id'], $multipleWishlistParams);
                 if (!$result) {
                     throw new LocalizedException(__('Unable to update your wishlist.'));
                 }
 
-                $this->setSuccessMessage(__('Wishlist %s was updated!', $multipleWishlistParams['title']));
+                $message = (string) __('Wishlist %1 was updated!', $multipleWishlistParams['title']);
+                $this->setSuccessMessage($message);
             }
 
             if (!$validFormKey) {
                 $this->setErrorMessage(__('Form key invalid!'));
             }
 
-            $resultRedirect->setPath('*/*/edit');
+            $resultRedirect->setPath('multiple_wishlist/page/edit');
 
         } catch (LocalizedException $exception) {
             $this->setErrorMessage($exception->getMessage());
-            $resultRedirect->setPath('*/*/edit');
+            $resultRedirect->setPath('multiple_wishlist/page/listing');
         } catch (\Exception $exception) {
-            $this->setErrorMessage($exception->getMessage());
-            $resultRedirect->setPath('multiple_wishlist/page/create/');
+            $this->setErrorMessage(__('We can\'t update your wishlist right now.'));
+            $this->logger->error($exception->getMessage());
+            $resultRedirect->setPath('multiple_wishlist/page/listing/');
         }
 
         $resultRedirect->setHttpResponseCode(301);
