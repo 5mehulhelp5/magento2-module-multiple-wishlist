@@ -84,6 +84,9 @@ abstract class AbstractPost implements ActionInterface
             throw new LocalizedException(__('The multiple wishlist module is disabled.'));
         }
 
+        /**
+         * @todo Verificar se o redirect bloco catch está redirecionando para a página de login
+         */
         if (!$session->isLoggedIn()) {
             throw new LocalizedException(
                 __('Something went wrong while saving the page. Please refresh the page and try again.')

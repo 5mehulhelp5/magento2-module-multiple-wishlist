@@ -91,49 +91,38 @@ class EditPost extends AbstractPost implements HttpPostActionInterface
             $this->init();
 
             $validFormKey = $this->formKeyValidator->validate($this->request);
-            if ($validFormKey) { // verificar se o método da requisição é post
-                // form data
-                $multipleWishlistParams = $this->request->getParam('multiple_wishlist');
-                if (empty($multipleWishlistParams)) {
-                    throw new LocalizedException(
-                        __('You must fill in all fields required to edit list.')
-                    );
-                }
-
-                // $storeId = (int) $this->getStore()->getId();
-                $multipleWishlistParams['id']         = filter_var($multipleWishlistParams['id'], FILTER_VALIDATE_INT) ?? 0;
-                $multipleWishlistParams['title']      = filter_var($multipleWishlistParams['title'], FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
-                $multipleWishlistParams['is_active']  = (bool) filter_var($multipleWishlistParams['is_active'], FILTER_VALIDATE_INT, [
-                    'options' => [
-                        'min_range' => 0,
-                        'max_range' => 1
-                    ]
-                ]) ?? 0;
-
-                // Wishlist id
-                if (empty($multipleWishlistParams['id'])) {
-                    throw new LocalizedException(__('Wishlist ID is required.'));
-                }
-
-                $result = $this->multipleWishlistRepository->update($multipleWishlistParams['id'], $multipleWishlistParams);
-                if (!$result) {
-                    throw new LocalizedException(__('Unable to update your wishlist.'));
-                }
-
-                $message = (string) __('Wishlist %1 was updated!', $multipleWishlistParams['title']);
-                $this->setSuccessMessage($message);
+            if ($validFormKey) {
+                throw new LocalizedException(
+                    __('Something went wrong while saving the page. Please refresh the page and try again.')
+                );
             }
 
-            if (!$validFormKey) {
-                $this->setErrorMessage(__('Form key invalid!'));
+            // form data
+            $multipleWishlistParams = $this->request->getParam('multiple_wishlist');
+            if (empty($multipleWishlistParams)) {
+                throw new LocalizedException(
+                    __('You must fill in all fields required to edit list.')
+                );
             }
 
-            $resultRedirect->setPath('multiple_wishlist/page/edit');
+            $this->sanitizeFormData($multipleWishlistParams);
+            $this->validateFormData($multipleWishlistParams);
 
-        } catch (LocalizedException $exception) {
-            $this->setErrorMessage($exception->getMessage());
+            $result = $this->multipleWishlistRepository->update($multipleWishlistParams);
+            if (!$result) {
+                throw new LocalizedException(__('Unable to update your wishlist.'));
+            }
+
+            $message = (string) __('Wishlist %1 was updated!', $multipleWishlistParams['title']);
+            $this->messageManager->addSuccessMessage($message);
+
             $resultRedirect->setPath('multiple_wishlist/page/listing');
+
+        } catch(LocalizedException $exception) {
+            $this->setErrorMessage($exception->getMessage());
+            $resultRedirect->setPath('multiple_wishlist/page/edit', ['id' => $multipleWishlistParams['id'] ?? 0]);
         } catch (\Exception $exception) {
+
             $this->setErrorMessage(__('We can\'t update your wishlist right now.'));
             $this->logger->error($exception->getMessage());
             $resultRedirect->setPath('multiple_wishlist/page/listing/');
@@ -141,5 +130,38 @@ class EditPost extends AbstractPost implements HttpPostActionInterface
 
         $resultRedirect->setHttpResponseCode(301);
         return $resultRedirect;
+    }
+
+    private function sanitizeFormData(array $multipleWishlistParams): array
+    {
+        $multipleWishlistParams['id']        = filter_var($multipleWishlistParams['id'], FILTER_VALIDATE_INT) ?? 0;
+        $multipleWishlistParams['title']     = filter_var($multipleWishlistParams['title'], FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
+        $multipleWishlistParams['is_active'] = (bool) filter_var($multipleWishlistParams['is_active'], FILTER_VALIDATE_INT, [
+            'options' => [
+                'min_range' => 0,
+                'max_range' => 1
+            ]
+        ]) ?? 0;
+
+        return $multipleWishlistParams;
+    }
+
+    private function validateFormData(array $multipleWishlistParams): void
+    {
+        if (empty($multipleWishlistParams['id'])) {
+            throw new LocalizedException(__('Wishlist ID is required.'));
+        }
+
+        if (empty($multipleWishlistParams['title'])) {
+            throw new LocalizedException(__('Title is required.'));
+        }
+
+        if (mb_strlen($multipleWishlistParams['title']) > 255) {
+            throw new LocalizedException(__('Title must be less than 255 characters.'));
+        }
+
+        if (!isset($multipleWishlistParams['is_active'])) {
+            throw new LocalizedException(__('Is Active is required.'));
+        }
     }
 }
