@@ -65,7 +65,7 @@ class MultipleWishlistRepository implements MultipleWishlistRepositoryInterface
     {
         $multipleWishlist = $this->getById($multipleWishlistFormData['id']);
 
-        if ($multipleWishlist->getCustomerId() !== $this->customerSession->getCustomerId()) {
+        if ($multipleWishlist->getCustomerId() != $this->customerSession->getCustomerId()) {
             throw new NoSuchEntityException(__('You are not authorized to update this wishlist.'));
         }
 

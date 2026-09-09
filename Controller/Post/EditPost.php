@@ -91,7 +91,7 @@ class EditPost extends AbstractPost implements HttpPostActionInterface
             $this->init();
 
             $validFormKey = $this->formKeyValidator->validate($this->request);
-            if ($validFormKey) {
+            if (!$validFormKey) {
                 throw new LocalizedException(
                     __('Something went wrong while saving the page. Please refresh the page and try again.')
                 );
@@ -105,7 +105,7 @@ class EditPost extends AbstractPost implements HttpPostActionInterface
                 );
             }
 
-            $this->sanitizeFormData($multipleWishlistParams);
+            $multipleWishlistParams =$this->sanitizeFormData($multipleWishlistParams);
             $this->validateFormData($multipleWishlistParams);
 
             $result = $this->multipleWishlistRepository->update($multipleWishlistParams);
