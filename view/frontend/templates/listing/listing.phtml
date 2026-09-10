@@ -37,9 +37,11 @@
                             </a>
 
                             <?php if ($helperModule->canDeleteLists()) : ?>
-                                <a class="action view" href="<?= $block->getDeleteUrl($list->getId()) ?>">
-                                    <?= __('Delete') ?>
-                                </a>
+                                <a
+                                    class="action view"
+                                    href="<?= $block->getDeleteUrl($list->getId()) ?>"
+                                    onclick="return confirm('Tem certeza que deseja excluir esta lista de desejo?');"
+                                ><?= __('Delete') ?></a>
                             <?php endif; ?>
                         </td>
                     </tr>

@@ -103,6 +103,11 @@ class Listing extends Template
         return $this->getUrl('multiple_wishlist/page/edit', ['id' => $multipleWishlistId]);
     }
 
+    public function getDeleteUrl(int $multipleWishlistId): string
+    {
+        return $this->getUrl('multiple_wishlist/post/deletePost', ['id' => $multipleWishlistId]);
+    }
+
     /**
      * @codeCoverageIgnore
      */

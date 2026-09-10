@@ -89,7 +89,7 @@ class CreatePost extends AbstractPost
                 $multipleWishlistId
             )->render());
 
-            $resultRedirect->setPath('multiple_wishlist/page/view/', ['id' => $multipleWishlistId]);
+            $resultRedirect->setPath('multiple_wishlist/page/listing/');
 
         } catch (LocalizedException $exception) {
             $this->setErrorMessage($exception->getMessage());

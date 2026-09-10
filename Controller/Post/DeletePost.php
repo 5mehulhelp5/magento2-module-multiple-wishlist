@@ -60,7 +60,6 @@ class DeletePost extends AbstractPost
             $this->init();
 
             $multipleWishlistId = (int) $this->request->getParam('id');
-
             if (!$multipleWishlistId) {
                 throw new LocalizedException(
                     __('You must pass a valid ID to delete a list.')
