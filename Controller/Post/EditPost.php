@@ -22,6 +22,7 @@ use Magento\Framework\Data\Form\FormKey\Validator;
 use Magento\Framework\Exception\LocalizedException;
 use Magento\Framework\Message\ManagerInterface;
 use Magento\Store\Model\StoreManagerInterface;
+use Magento\TestFramework\Helper\Customer;
 use Psr\Log\LoggerInterface;
 
 /**
@@ -32,15 +33,9 @@ use Psr\Log\LoggerInterface;
  */
 class EditPost extends AbstractPost implements HttpPostActionInterface
 {
-    /**
-     * @var MultipleWishlistRepositoryInterface
-     */
-    protected $multipleWishlistRepository;
-
-    /**
-     * @var MultipleWishlistFactory
-     */
-    protected $multipleWishlistFactory;
+    protected MultipleWishlistRepositoryInterface $multipleWishlistRepository;
+    protected MultipleWishlistFactory $multipleWishlistFactory;
+    protected object $customerSession;
 
     /**
      * EditPost constructor
@@ -81,6 +76,7 @@ class EditPost extends AbstractPost implements HttpPostActionInterface
         );
         $this->multipleWishlistRepository = $multipleWishlistRepository;
         $this->multipleWishlistFactory = $multipleWishlistFactory;
+        $this->customerSession = $sessionFactory->create();
     }
 
     public function execute(): Redirect
@@ -105,17 +101,29 @@ class EditPost extends AbstractPost implements HttpPostActionInterface
                 );
             }
 
-            $multipleWishlistParams =$this->sanitizeFormData($multipleWishlistParams);
+            $multipleWishlistParams = $this->sanitizeFormData($multipleWishlistParams);
             $this->validateFormData($multipleWishlistParams);
 
-            $result = $this->multipleWishlistRepository->update($multipleWishlistParams);
-            if (!$result) {
-                throw new LocalizedException(__('Unable to update your wishlist.'));
+            // carrega os dados da wishlist pelo id.
+            $wishlist = $this->multipleWishlistRepository->getById($multipleWishlistParams['id']);
+
+            /** @todo - Eu não sei se essa lógica fica aqui, validar. */
+            if ( intval($wishlist->getCustomerId()) !== intval($this->customerSession->getCustomerId()) ) {
+                throw new LocalizedException( __( 'You are not allowed to edit this wishlist.' ) );
             }
 
+            // atualiza os dados da wishlist com os dados do formulário.
+            $wishlist->setTitle($multipleWishlistParams['title']);
+            $wishlist->setIsActive($multipleWishlistParams['is_active']);
+
+            // persiste os dados da wishlist no banco de dados.
+            $this->multipleWishlistRepository->save($wishlist);
+
+            // mensagem de sucesso.
             $message = (string) __('Wishlist %1 was updated!', $multipleWishlistParams['title']);
             $this->messageManager->addSuccessMessage($message);
 
+            // redirecionamento para a página de listagem de wishlists.
             $resultRedirect->setPath('multiple_wishlist/page/listing');
 
         } catch(LocalizedException $exception) {
@@ -134,14 +142,14 @@ class EditPost extends AbstractPost implements HttpPostActionInterface
 
     private function sanitizeFormData(array $multipleWishlistParams): array
     {
-        $multipleWishlistParams['id']        = filter_var($multipleWishlistParams['id'], FILTER_VALIDATE_INT) ?? 0;
-        $multipleWishlistParams['title']     = filter_var($multipleWishlistParams['title'], FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
+        $multipleWishlistParams['id']        = (int) filter_var($multipleWishlistParams['id'], FILTER_VALIDATE_INT) ?? 0;
+        $multipleWishlistParams['title']     = (string) filter_var($multipleWishlistParams['title'], FILTER_SANITIZE_SPECIAL_CHARS) ?? '';
         $multipleWishlistParams['is_active'] = (bool) filter_var($multipleWishlistParams['is_active'], FILTER_VALIDATE_INT, [
             'options' => [
                 'min_range' => 0,
                 'max_range' => 1
             ]
-        ]) ?? 0;
+        ]) ?? false;
 
         return $multipleWishlistParams;
     }
@@ -158,6 +166,10 @@ class EditPost extends AbstractPost implements HttpPostActionInterface
 
         if (mb_strlen($multipleWishlistParams['title']) > 255) {
             throw new LocalizedException(__('Title must be less than 255 characters.'));
+        }
+
+        if (mb_strlen($multipleWishlistParams['title']) < 3) {
+            throw new LocalizedException(__('Title must be at least 3 characters.'));
         }
 
         if (!isset($multipleWishlistParams['is_active'])) {

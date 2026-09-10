@@ -11,7 +11,7 @@
     $viewModel = $block->getData('multiple_wishlist_listing_edit');
     $wishlist  = $viewModel->getWishlist();
     $title     = $wishlist->getTitle() ?? '';
-    $status    = $wishlist->getIsActive() ?? '';
+    $status    = $wishlist->getIsActive() ?? false;
 ?>
 <h1 class="page-title" style="margin-top:1.5rem;">
     <span class="base" data-ui-id="page-title-wrapper"><?= __('Wishlist Edit: %1', $viewModel->getTitle()) ?></span>
@@ -38,8 +38,8 @@
                 </label>
                 <div class="control">
                     <select name="multiple_wishlist[is_active]" title="<?= __('Status') ?>">
-                        <option value="0" <?php echo ($status == 0) ? 'selected' : '' ?>><?= __('Inactive') ?></option>
-                        <option value="1" <?php echo ($status == 1) ? 'selected' : '' ?>><?= __('Active') ?></option>
+                        <option value="0" <?php echo ($status === false) ? 'selected' : '' ?>><?= __('Inactive') ?></option>
+                        <option value="1" <?php echo ($status === true) ? 'selected' : '' ?>><?= __('Active') ?></option>
                     </select>
                 </div>
             </div>

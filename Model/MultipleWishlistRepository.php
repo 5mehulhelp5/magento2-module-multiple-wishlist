@@ -51,7 +51,7 @@ class MultipleWishlistRepository implements MultipleWishlistRepositoryInterface
             /** @var MultipleWishlist $multipleWishlist */
             $this->resourceModelMultipleWishlist->save($multipleWishlist);
 
-            $multipleWishlist = $this->getById((int) $multipleWishlist->getEntityId());
+            $multipleWishlist = $this->getById((int) $multipleWishlist->getWishlistId());
         } catch (\Exception $exception) {
             throw new CouldNotSaveException(
                 __('Unable to save object. Error: %1', $exception->getMessage())
@@ -59,22 +59,6 @@ class MultipleWishlistRepository implements MultipleWishlistRepositoryInterface
         }
 
         return $multipleWishlist;
-    }
-
-    public function update(array $multipleWishlistFormData): bool
-    {
-        $multipleWishlist = $this->getById($multipleWishlistFormData['id']);
-
-        if ($multipleWishlist->getCustomerId() != $this->customerSession->getCustomerId()) {
-            throw new NoSuchEntityException(__('You are not authorized to update this wishlist.'));
-        }
-
-        $multipleWishlist->setTitle($multipleWishlistFormData['title']);
-        $multipleWishlist->setIsActive($multipleWishlistFormData['is_active']);
-
-        $isSave = $this->save($multipleWishlist);
-
-        return $isSave instanceof MultipleWishlistInterface;
     }
 
     public function delete(MultipleWishlistInterface $multipleWishlist): bool
