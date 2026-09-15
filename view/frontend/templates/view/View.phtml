@@ -8,15 +8,15 @@ $viewModel = $block->getData('multiple_wishlist_items_list');
 $wishlistItems = $viewModel->getWishlistItems();
 ?>
 
+<h1 class="page-title" style="margin-top:1.5rem;">
+    <span class="base" data-ui-id="page-title-wrapper"><?= __('Wishlist Items: %1', $viewModel->getWishlistTitle()) ?></span>
+</h1>
+
 <?php if (empty($wishlistItems)): ?>
-    <p class="empty">Wishlist is empty</p>
+    <p class="empty">Wishlist is empty.</p>
 <?php endif; ?>
 
 <?php if (!empty($wishlistItems)): ?>
-    <h1 class="page-title" style="margin-top:1.5rem;">
-        <span class="base" data-ui-id="page-title-wrapper"><?= __('Wishlist Items: %1', $wishlist->getTitle()) ?></span>
-    </h1>
-
     <div class="multiple-wishlist-header" style="width:100%;">
         <div class="actions-btn" style="display:flex; justify-content:flex-start;margin-top:1.5rem;margin-bottom:1.5rem;">
             <a class="" href="<?= $viewModel->getBackUrl() ?>" style="padding: .5rem 1rem; border-right: 1px solid #999;">

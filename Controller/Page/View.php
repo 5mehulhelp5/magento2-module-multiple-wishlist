@@ -18,7 +18,7 @@ class View extends AbstractPage
         $this->checkPermissions();
 
         $page = $this->resultPageFactory->create();
-        // $page->getConfig()->getTitle()->unsetValue(); // Unset the default title
+        $page->getConfig()->getTitle()->unsetValue();
 
         return $page;
     }

@@ -71,6 +71,17 @@ class ItemsList implements ArgumentInterface
     }
 
     /**
+     * Get the wishlist name.
+     * 
+     * @return string|null
+     */
+    public function getWishlistTitle(): string
+    {
+        return $this->multipleWishlistRepository->getById($this->getWishlistId())->getTitle();
+    }
+
+
+    /**
      * Check if wishlist exists
      *
      * @throws \InvalidArgumentException
