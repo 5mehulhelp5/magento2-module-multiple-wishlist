@@ -47,9 +47,10 @@
         <div class="fieldset">
             <div class="field">
                 <select class="input-field" id="" name="">
-                    <option value=""></option>
-                    <option value="2">Eletrônicos</option>
-                    <option value="1">Ferramentas</option>
+                    <option value="">Selecione uma lista</option>
+                    <? foreach($block->getMultipleWishlistList() as $wishlist): ?>
+                        <option value="<?= $wishlist->getWishlistId() ?>"><?= $wishlist->getTitle() ?></option>
+                    <? endforeach; ?>
                 </select>
             </div>
             <button type="button" title="Adicionar à lista de desejo" class="action primary toMultipleWishlist" id="multiple-wishlist-addproduct-button">
