@@ -41,11 +41,14 @@
             max-width: 160px;
             padding: 1rem;
         }
+        .box-multiple-wishlist .message {
+            display: none;
+        }
     </style>
 
     <div
+        id="box-multiple-wishlist"
         class="box-multiple-wishlist"
-        data-bind="scope: multipleWishlist"
     >
         <h4 class="title"><?= $escaper->escapehtml(__('Adicione à sua lista de desejo')); ?></h4>
 
@@ -54,66 +57,27 @@
                 <select
                     class="input-field"
                     id="wishlist-select"
-                    data-bind="
-                        options: wishlist,
-                        optionsText: 'name',
-                        optionsValue: 'id',
-                        value: selectedWishlistId,
-                        optionsCaption: '<?= $escaper->escapeJs('Selecione uma lista') ?>'
-                    "
-                ></select>
-                <?php //foreach($block->getMultipleWishlistList() as $wishlist): ?>
-                    <!-- <option value="<?php //echo $wishlist->getWishlistId() ?>"><?php //echo $wishlist->getTitle() ?></option> -->
-                <?php //endforeach; ?>
+                >
+                <option value=""><?= $escaper->escapehtml(__('Selecione uma lista de desejo')); ?></option>
+                    <?php foreach($block->getMultipleWishlistList() as $wishlist): ?>
+                        <option value="<?= $wishlist->getWishlistId() ?>"><?= $wishlist->getTitle() ?></option>
+                    <?php endforeach; ?>
+                </select>
             </div>
 
-            <button
-                type="button"
+            <a
+                href="#"
                 title="Adicionar à lista de desejo"
                 class="action primary"
-                data-bind="
-                    click: addToWishlist,
-                    enable: canAdd,
-                    css: {
-                        'loading': isLoading
-                    }
-                "
             >
-                <span data-bind="text: buttonLabel"></span>
-            </button>
+                <span><?= $escaper->escapehtml(__('Adicionar à lista de desejo')); ?></span>
+            </a>
         </div>
 
         <!-- Success Message -->
-        <div
-            class="message success"
-            data-bind="
-                visible: successMessage,
-                text: successMessage
-            "
-        ></div>
+        <div class="message success"></div>
 
         <!-- Error Message -->
-        <div
-            class="message error"
-            data-bind="
-                visible: errorMessage,
-                text: errorMessage
-            "
-        ></div>
+        <div class="message error"></div>
     </div>
-
-    <script type="text/x-magento-init">
-        {
-            "*": {
-                [data-bind='scope: multipleWishlist']": {
-                    "Brunoduarte_MultipleWishlist/js/product/multiple_wishlist": {
-                        "productId": <?= (int) $block->getProductId() ?>,
-                        "addUrl": "<?= $escaper->escapeUrl(
-                            $block->getUrl('multiple_wishlist/ajax/addProductToMultipleWishlist')
-                        ) ?>"
-                    }
-                }
-            }
-        }
-    </script>
 <?php endif; ?>
