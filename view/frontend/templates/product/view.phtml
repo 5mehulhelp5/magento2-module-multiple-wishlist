@@ -46,38 +46,35 @@
         }
     </style>
 
-    <div
-        id="box-multiple-wishlist"
-        class="box-multiple-wishlist"
-    >
-        <h4 class="title"><?= $escaper->escapehtml(__('Adicione à sua lista de desejo')); ?></h4>
+    <div id="box-multiple-wishlist" class="box-multiple-wishlist">
+        <form
+            method="post"
+            action="<?= $escaper->escapehtml($block->getAddProductUrl()) ?>"
+            name="multipleWishlistAddProduct"
+            id="multipleWishlistAddProduct"
+        >
+            <h4 class="title"><?= $escaper->escapehtml(__('Adicione à sua lista de desejo')); ?></h4>
 
-        <div class="fieldset">
-            <div class="field">
-                <select
-                    class="input-field"
-                    id="wishlist-select"
-                >
-                <option value=""><?= $escaper->escapehtml(__('Selecione uma lista de desejo')); ?></option>
-                    <?php foreach($block->getMultipleWishlistList() as $wishlist): ?>
-                        <option value="<?= $wishlist->getWishlistId() ?>"><?= $wishlist->getTitle() ?></option>
-                    <?php endforeach; ?>
-                </select>
+            <div class="fieldset">
+                <div class="field">
+                    <select class="input-field" id="wishlist-select">
+                        <option value=""><?= $escaper->escapehtml(__('Selecione uma lista de desejo')); ?></option>
+                        <?php foreach($block->getMultipleWishlistList() as $wishlist): ?>
+                            <option value="<?= $wishlist->getWishlistId() ?>"><?= $wishlist->getTitle() ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </div>
+
+                <button type="submit" class="action primary">
+                    <span><?= $escaper->escapehtml(__('Adicionar à lista de desejo')); ?></span>
+                </button>
             </div>
 
-            <a
-                href="#"
-                title="Adicionar à lista de desejo"
-                class="action primary"
-            >
-                <span><?= $escaper->escapehtml(__('Adicionar à lista de desejo')); ?></span>
-            </a>
-        </div>
+            <!-- Success Message -->
+            <div class="message success"></div>
 
-        <!-- Success Message -->
-        <div class="message success"></div>
-
-        <!-- Error Message -->
-        <div class="message error"></div>
+            <!-- Error Message -->
+            <div class="message error"></div>
+        </form>
     </div>
 <?php endif; ?>

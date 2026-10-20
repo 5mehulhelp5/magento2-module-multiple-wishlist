@@ -69,4 +69,9 @@ class View extends ElementTemplate
     {
         return (int) $this->storeManager->getStore()->getId();
     }
+
+    public function getAddProductUrl(): string
+    {
+        return $this->getUrl('multiple_wishlist/post/addProductToMultipleWishlist', ['_secure' => true]);
+    }
 }
