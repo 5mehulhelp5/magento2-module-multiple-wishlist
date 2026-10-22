@@ -53,11 +53,14 @@
             name="multipleWishlistAddProduct"
             id="multipleWishlistAddProduct"
         >
+            <input type="hidden" name="multiplewishlistItem[product_id]" value="<?= $block->getProductId() ?? '' ?>" />
+            <input type="hidden" name="multiplewishlistItem[customer_id]" value="<?= $block->getCustomerId() ?? '' ?>" />
+
             <h4 class="title"><?= $escaper->escapehtml(__('Adicione à sua lista de desejo')); ?></h4>
 
             <div class="fieldset">
                 <div class="field">
-                    <select class="input-field" id="wishlist-select">
+                    <select class="input-field" name="multiplewishlistItem[wishlist_id]" id="wishlist-select">
                         <option value=""><?= $escaper->escapehtml(__('Selecione uma lista de desejo')); ?></option>
                         <?php foreach($block->getMultipleWishlistList() as $wishlist): ?>
                             <option value="<?= $wishlist->getWishlistId() ?>"><?= $wishlist->getTitle() ?></option>

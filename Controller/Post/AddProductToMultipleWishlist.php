@@ -23,7 +23,7 @@ class AddProductToMultipleWishlist extends AbstractPost
     protected MultipleWishlistFactory $multipleWishlistFactory;
 
     public function __construct(
-        RedirectFactory $redirectFactory,
+        RedirectFactory $resultRedirectFactory,
         RedirectInterface $redirect,
         Validator $formKeyValidator,
         Data $helperModule,
@@ -36,7 +36,7 @@ class AddProductToMultipleWishlist extends AbstractPost
         MultipleWishlistFactory $multipleWishlistFactory
     ) {
         parent::__construct(
-            $redirectFactory,
+            $resultRedirectFactory,
             $redirect,
             $formKeyValidator,
             $helperModule,
@@ -52,7 +52,7 @@ class AddProductToMultipleWishlist extends AbstractPost
 
     public function execute(): Redirect
     {
-        $redirect = $this->redirectResultFactory->create();
+        $redirect = $this->resultRedirectFactory->create();
 
         $request = $this->request;
 

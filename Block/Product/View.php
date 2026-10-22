@@ -63,11 +63,18 @@ class View extends ElementTemplate
         $wishlistActiveCollection->addFieldToFilter('is_active', '1')->addOrder('title', 'asc');
         return $wishlistActiveCollection;
     }
-
-
     protected function getStoreId(): int
     {
         return (int) $this->storeManager->getStore()->getId();
+    }
+    public function getProductId(): int
+    {
+        return (int) $this->getRequest()->getParam('id');
+    }
+
+    public function getCustomerId(): int
+    {
+        return (int) $this->customerSession->getCustomerId();
     }
 
     public function getAddProductUrl(): string
