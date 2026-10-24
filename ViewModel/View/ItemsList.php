@@ -72,7 +72,7 @@ class ItemsList implements ArgumentInterface
 
     /**
      * Get the wishlist name.
-     * 
+     *
      * @return string|null
      */
     public function getWishlistTitle(): string
@@ -119,7 +119,7 @@ class ItemsList implements ArgumentInterface
                 return [];
             }
 
-            return $wishlistItems;
+            return $wishlistItems->getData();
 
         } catch (\InvalidArgumentException $e) {
             $this->messageManager->addErrorMessage($e->getMessage());

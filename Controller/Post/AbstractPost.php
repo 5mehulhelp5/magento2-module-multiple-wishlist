@@ -121,5 +121,26 @@ abstract class AbstractPost implements ActionInterface
         return $this->storeManager->getStore();
     }
 
+    protected function checkPermissions()
+    {
+        if (!$this->helperModule->isModuleEnable()) {
+            $this->messageManager->addErrorMessage(
+                __("The multiple wishlist module is disabled.")
+            );
+            return $this->resultRedirectFactory->create()->setUrl(
+                $this->redirect->getRefererUrl()
+            );
+        }
+
+        if (!$this->getSession()->isLoggedIn()) {
+            $this->messageManager->addErrorMessage(
+                __('Customer is not logged in')
+            );
+            return $this->resultRedirectFactory->create()->setUrl(
+                $this->redirect->getRefererUrl()
+            );
+        }
+    }
+
     abstract public function execute(): Redirect;
 }
